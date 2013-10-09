@@ -9,7 +9,7 @@
 # pypdflib is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.  
+# (at your option) any later version.
 #
 # pypdflib is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -34,7 +34,7 @@ ATTRS = ('font', 'font_size', 'border', 'margin', 'padding', 'align', 'valign', 
 
 class Paper(object) :
     def __init__( self, name, width, height ) :
-        self.name =  name 
+        self.name =  name
         self.width = width
         self.height = height
 
@@ -55,7 +55,7 @@ class AttributedList( list ) :
             if name :
                 name = self._make_attributeName( value.name )
                 setattr( self, name, value )
-    
+
     def _make_attributeName(self, value ) :
         assert value and type( value ) is StringType
         value = value.replace( ' ', '' )
@@ -82,7 +82,7 @@ class Colors( AttributedList ) :
     def __init__( self ) :
         super( Colors, self ).__init__( Color )
 """
-Standard Colors. 
+Standard Colors.
 """
 StandardColors = Colors()
 StandardColors.append( Color( 'Black',         0,    0,   0 ) )

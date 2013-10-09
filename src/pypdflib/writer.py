@@ -10,7 +10,7 @@
 # pypdflib is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.  
+# (at your option) any later version.
 #
 # pypdflib is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -45,20 +45,20 @@ class PDFWriter():
         self.ybottom = self.height - self.bottom_margin*2
         self.header = None
         self.footer = None
-        
+
     def set_header(self, header):
         """
         Sets the header of the page
         """
-        self.header = header 
+        self.header = header
         self.write_header(self.header)
-        
+
     def set_footer(self, footer):
         """
         Sets the footer of the page
         """
         self.footer = footer
-        
+
     def add_text(self, text):
         """
         Add text widget
@@ -73,18 +73,18 @@ class PDFWriter():
         if text.coordinates== None or text.coordinates == [0,0,0,0]:
             text_layout.set_width((int)((self.width - self.left_margin-self.right_margin) * pango.SCALE))
             if self.position_y == 0:
-                self.position_y += self.top_margin 
+                self.position_y += self.top_margin
             self.position_y += self.line_width
-        else:    
+        else:
             text_layout.set_width(int(text.coordinates[2]-text.coordinates[0])*pango.SCALE)
             self.position_x = text.coordinates[0]
             self.position_y = text.coordinates[1]
-            
+
         text_layout.set_alignment(text.text_align)
         if text.is_markup:
             text_layout.set_markup(text.text)
         else:
-            text_layout.set_text(str(text.text))    
+            text_layout.set_text(str(text.text))
         ink_rect, logical_rect = text_layout.get_extents()
         self.assert_page_break()
         self.context.move_to(self.position_x, self.position_y)
@@ -92,9 +92,9 @@ class PDFWriter():
         self.pc.show_layout(text_layout)
         if text.coordinates== None or  text.coordinates == [0,0,0,0]:
             self.position_y += logical_rect[3]/pango.SCALE+self.para_break_width
-        
+
     def write_footer(self,footer):
-        if footer == None: return 
+        if footer == None: return
         footer_font_description = pango.FontDescription()
         footer_font_description.set_family(footer.font)
         footer_font_description.set_size((int)(footer.font_size* pango.SCALE))
@@ -113,9 +113,9 @@ class PDFWriter():
         self.pc.show_layout(footer_layout)
         self.draw_line(y_position)
         self.ybottom = y_position-self.line_width
-        
+
     def write_header(self, header):
-        if header == None: return 
+        if header == None: return
         header_font_description = pango.FontDescription()
         header_font_description.set_family(header.font)
         header_font_description.set_size((int)(header.font_size * pango.SCALE))
@@ -134,7 +134,7 @@ class PDFWriter():
         y_position = self.top_margin+(logical_rect[3] / pango.SCALE)
         self.draw_line(y_position)
         self.position_y = y_position + self.line_width*2
-        
+
     def draw_line(self, y_position=0):
         if y_position == 0 :
             y_position = self.position_y
@@ -143,7 +143,7 @@ class PDFWriter():
         self.context.line_to(self.width-self.right_margin,  y_position)
         self.context.stroke()
         self.position_y+= self.line_width
-        
+
     def line_break(self):
         self.assert_page_break();
         self.position_y+= self.line_width
@@ -193,8 +193,8 @@ class PDFWriter():
                     self.pc.show_layout_line( line)
                     line_height = (int)(logical_rect[3] / pango.SCALE)
                     self.context.rel_move_to(-xstart, line_height )
-                    self.position_y += line_height 
- 
+                    self.position_y += line_height
+
                 if self.position_y > self.ybottom:
                     self.page_num= self.page_num+1
                     self.write_header(self.header)
@@ -205,10 +205,10 @@ class PDFWriter():
                          self.write_footer(self.footer)
                     self.context.show_page()
                     break
-                    
+
             first_line = False
 
-    def flush(self) :   
+    def flush(self) :
         """
         Flush the contents before finishing and closing the PDF.
         This must be called at the end of the program. Otherwise the footer at the
@@ -222,38 +222,38 @@ class PDFWriter():
             self.footer.set_text(str(self.page_num))
             self.write_footer(self.footer)
         self.context.show_page()
-    
+
     def add_table(self, table):
-        if table.row_count == 0: 
+        if table.row_count == 0:
             print("Table has no rows")
-            return 
+            return
         self.context.identity_matrix()
         self.context.set_source_rgba (0.0, 0.0, 0.0, 1.0)
         x1 = self.position_x
-        y1 = self.position_y 
+        y1 = self.position_y
         width=height=0
         for row in range(table.row_count):
             for column in range(table.column_count):
                 height = table.rows[row].height
                 cell = table.rows[row].cells[column]
-                width  = cell.width    
+                width  = cell.width
                 self.context.set_source_rgba (cell.color.red, cell.color.green, cell.color.blue, cell.color.alpha)
                 self.context.set_line_width(table.border_width)
                 self.context.rectangle(x1,y1,width,height)
                 self.context.stroke()
                 self._draw_cell(cell, x1, y1, x1+width, y1+height)
                 x1 += width
-            y1 += height    
+            y1 += height
             x1= self.left_margin
             self.position_y += height
-                
+
     def _draw_cell(self, cell, x1, y1, x2, y2):
         widget = cell.content
         if cell.content.__class__ == Text:
             widget.coordinates = [x1, y1, x2, y2]
             self.add_text(widget)
         #TODO: Add other widgets
-                
+
     def add_image(self, image):
         self.context.save ()
         self.context.move_to(self.left_margin, self.position_y)
@@ -269,10 +269,10 @@ class PDFWriter():
         self.context.scale(0.5, 0.5)
         self.context.set_source_surface (image_surface,self.left_margin/0.5, self.position_y/0.5)
         self.context.paint()
-        self.context.restore ()        
-        self.position_y+= h*0.5+ image.padding_bottom 
-        
-        
+        self.context.restore ()
+        self.position_y+= h*0.5+ image.padding_bottom
+
+
     def new_page(self):
         self.context.identity_matrix()
         self.context.set_source_rgba (1.0, 1.0, 1.0, 1.0)
@@ -280,14 +280,14 @@ class PDFWriter():
         self.context.fill()
         self.context.set_source_rgb (0.0, 0.0, 0.0)
         self.context.move_to(self.left_margin, self.top_margin)
-        self.position_y=0    
+        self.position_y=0
         self.context.show_page()
-        
+
     def blank_space(self, height):
         """
-        Inserts vertical blank space 
+        Inserts vertical blank space
         Color will be white.
-        
+
         Arguments
         -height - The vertical measurement for the blank space.
         """
@@ -297,9 +297,9 @@ class PDFWriter():
         self.context.fill()
         self.context.set_source_rgb (0.0, 0.0, 0.0)
         self.context.move_to(self.left_margin, self.top_margin)
-        self.position_y=0    
-        
-                    
+        self.position_y=0
+
+
     def page_break(self):
         """
         Insert a pagebreak.
@@ -314,10 +314,10 @@ class PDFWriter():
             self.footer.set_text(str(self.page_num))
             self.write_footer(self.footer)
         self.context.show_page()
-        
+
     def assert_page_break(self):
         """
-        Check if the current y position exceeds the page's height. 
+        Check if the current y position exceeds the page's height.
         If so do the page break.
         """
         if  self.position_y > self.ybottom:
@@ -325,16 +325,16 @@ class PDFWriter():
 
     def move_context(self, xoffset, yoffset):
         """
-        Move the drawing context to given x,y offsets. 
+        Move the drawing context to given x,y offsets.
         This is relative to the currect x,y drawing positions.
-        
+
         Arguments:
-    
-        - xoffset: offset for the current x drawing postion 
-        - yoffset: offset for the current y drawing postion 
-        
+
+        - xoffset: offset for the current x drawing postion
+        - yoffset: offset for the current y drawing postion
+
         """
         self.position_x += xoffset
         self.position_y += yoffset
-        
-        
+
+
