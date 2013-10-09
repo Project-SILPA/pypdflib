@@ -23,7 +23,7 @@
 import pango
 import StringIO
 from PIL import Image as pil_image
-from utils import Hyphenator
+from hyphenator
 from styles import *
 class Widget(object):
 
@@ -70,7 +70,7 @@ class Widget(object):
         if name == 'text':
             text = object.__getattribute__(self, 'text')
             if(self.justify and self.language and self.hyphenate):
-                text = Hyphenator().hyphenate(text,self.language)
+                text = hyphenator.getInstance().hyphenate(text, u'\u00AD', self.language)
             return text
         else:
             return object.__getattribute__(self, name)
