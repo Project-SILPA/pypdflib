@@ -47,6 +47,6 @@ setup(
     setup_requires = ['setuptools-git'],
     namespace_packages=['pypdflib'],
     include_package_data = True,
-    install_requires=['setuptools','PIL', 'hyphenation'],
+    install_requires=['setuptools','Pillow', 'hyphenation'],
     zip_safe = False,
     )
