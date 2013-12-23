@@ -23,7 +23,7 @@
 import pango
 import StringIO
 from PIL import Image as pil_image
-from hyphenator
+import hyphenation as hyphenator
 from styles import *
 class Widget(object):
 
